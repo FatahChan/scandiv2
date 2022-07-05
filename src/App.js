@@ -3,8 +3,6 @@ import {BrowserRouter, Switch, Route} from "react-router-dom";
 import HeaderComponent from "./Compnents/Header/Header.Component";
 import ProductListingPageComponent from "./Compnents/PLP/PLP.Component";
 import {getProduct} from "./BackendCalls/getProduct";
-import ProductDetailsPageComponent from "./Compnents/PDP/ProductDetailsPage.Component";
-import CartComponent from "./Compnents/Cart/Cart.Component";
 
 class App extends Component {
   //        item string, qunitiy
@@ -13,13 +11,16 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cart: {'{"id":"huarache-x-stussy-le","attributes":{"Size":"40"}}': 11},
+      cart: {'{"id":"lorem","attributes":{"size":0}}':  0},
       selectedCurrency: "USD"
     }
   }
 
   addToCart(product){
     let currentCart = this.state.cart;
+    if(currentCart['{"id":"lorem","attributes":{"size":0}}'] !== undefined){
+      delete currentCart['{"id":"lorem","attributes":{"size":0}}']
+    }
     if(currentCart[product] !== undefined){
       currentCart[product] = Number(currentCart[product]) + 1
       this.setState({cart: currentCart})
@@ -57,24 +58,14 @@ class App extends Component {
               setSelectedCurrency={this.setSelectedCurrency.bind(this)}
             />
             <Switch>
-              <Route exact path="/product/:id">
-                <ProductDetailsPageComponent
-                    addToCart={this.addToCart.bind(this)}
-                    selectedCurrency={this.state.selectedCurrency}
-                />
-              </Route>
-              <Route exact path="/cart">
-                <CartComponent
-                    cart={this.state.cart}
-                />
-              </Route>
-              <Route exact path="/:category" >
+              <Route path="/:category" >
                 <ProductListingPageComponent
                     addToCart={this.addToCart.bind(this)}
                     selectedCurrency={this.state.selectedCurrency}
                 />
               </Route>
-
+              <Route></Route>
+              <Route></Route>
             </Switch>
           </BrowserRouter>
         </div>

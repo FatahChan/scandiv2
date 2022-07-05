@@ -2,7 +2,7 @@
 // {JSON.stringify({id: id, attributes: attributes}): quantity}
 
 
-function productsToCartItems(products){
+export function productsToCartItems(products){
   let cartItems = {}
   for (const product of products) {
     const key = JSON.stringify({id: product.id, attributes: product.attributes})

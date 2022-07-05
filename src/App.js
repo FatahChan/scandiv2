@@ -3,6 +3,7 @@ import {BrowserRouter, Switch, Route} from "react-router-dom";
 import HeaderComponent from "./Compnents/Header/Header.Component";
 import ProductListingPageComponent from "./Compnents/PLP/PLP.Component";
 import {getProduct} from "./BackendCalls/getProduct";
+import {productsToCartItems} from "./HelperFunction/productsToCartItems";
 
 class App extends Component {
   //        item string, qunitiy
@@ -11,16 +12,13 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cart: {'{"id":"lorem","attributes":{"size":0}}':  0},
+      cart: {},
       selectedCurrency: "USD"
     }
   }
 
   addToCart(product){
     let currentCart = this.state.cart;
-    if(currentCart['{"id":"lorem","attributes":{"size":0}}'] !== undefined){
-      delete currentCart['{"id":"lorem","attributes":{"size":0}}']
-    }
     if(currentCart[product] !== undefined){
       currentCart[product] = Number(currentCart[product]) + 1
       this.setState({cart: currentCart})
@@ -46,6 +44,10 @@ class App extends Component {
       }
     }
 
+  }
+  updateCart(products){
+    const cart = productsToCartItems(products)
+    this.setState({cart: cart})
   }
   setSelectedCurrency(currencyLabel){
     this.setState({selectedCurrency: currencyLabel})

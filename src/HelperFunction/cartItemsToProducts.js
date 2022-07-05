@@ -5,7 +5,7 @@
 
 import {getProduct} from "../BackendCalls/getProduct";
 
-async function cartItemsToProducts(cart) {
+export async function cartItemsToProducts(cart) {
   let items = []
 
   const keys = Object.keys(cart);

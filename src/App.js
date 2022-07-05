@@ -1,25 +1,76 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import {BrowserRouter, Switch, Route} from "react-router-dom";
+import HeaderComponent from "./Compnents/Header/Header.Component";
+import ProductListingPageComponent from "./Compnents/PLP/PLP.Component";
+import {getProduct} from "./BackendCalls/getProduct";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  //        item string, qunitiy
+  //cart: {JSON.stringfiy({id: id, attributes: {size: 41}): 2}
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      cart: {'{"id":"lorem","attributes":{"size":0}}':  0},
+      selectedCurrency: "USD"
+    }
+  }
+
+  addToCart(product){
+    let currentCart = this.state.cart;
+    if(currentCart['{"id":"lorem","attributes":{"size":0}}'] !== undefined){
+      delete currentCart['{"id":"lorem","attributes":{"size":0}}']
+    }
+    if(currentCart[product] !== undefined){
+      currentCart[product] = Number(currentCart[product]) + 1
+      this.setState({cart: currentCart})
+      console.log(this.state.cart)
+    }else {
+      let item = JSON.parse(product)
+      console.log(item)
+      if(item.attributes === undefined){
+        getProduct(item.id).then((res) => {
+          item.attributes = res.attributes
+          currentCart[JSON.stringify(item)] = 1
+          this.setState({
+            cart: currentCart
+          })
+          console.log(this.state.cart)
+        })
+      }else{
+        currentCart[JSON.stringify(item)] = 1
+        this.setState({
+          cart: currentCart
+        })
+        console.log(this.state.cart)
+      }
+    }
+
+  }
+  setSelectedCurrency(currencyLabel){
+    this.setState({selectedCurrency: currencyLabel})
+  }
+  render() {
+    return (
+        <div>
+          <BrowserRouter>
+            <HeaderComponent
+              setSelectedCurrency={this.setSelectedCurrency.bind(this)}
+            />
+            <Switch>
+              <Route path="/:category" >
+                <ProductListingPageComponent
+                    addToCart={this.addToCart.bind(this)}
+                    selectedCurrency={this.state.selectedCurrency}
+                />
+              </Route>
+              <Route></Route>
+              <Route></Route>
+            </Switch>
+          </BrowserRouter>
+        </div>
+    );
+  }
 }
 
 export default App;

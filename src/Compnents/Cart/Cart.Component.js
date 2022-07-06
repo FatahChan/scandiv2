@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import CartItemComponent from "./CartItem/CartItem.Component";
-
+import  "./Cart.css"
 class CartComponent extends Component {
   render() {
     return (
-        <div>
+        <div className="cart-page">
           <div></div>
-            <div>
+            <div className="cart-items">
               {this.props.cart.map((cartItem) => (
               <CartItemComponent
                   key={JSON.stringify(cartItem)}

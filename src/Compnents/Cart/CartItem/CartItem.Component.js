@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import CartItemInfoComponent from "./CartItemInfo/CartItemInfo.Component";
 import CartItemCounterComponent from "./CartItemCounter/CartItemCounter.Component";
 import CartItemCarouselComponent from "./CartItemCarousel/CartItemCarousel.Component";
-
+import "./CartItem.css"
 class CartItemComponent extends PureComponent {
   constructor(props) {
     super(props);
@@ -25,7 +25,7 @@ class CartItemComponent extends PureComponent {
   render() {
     if(this.state.isLoading) { return <div>load</div>; }
     return (
-        <div>
+        <div className="cart-item">
           <CartItemInfoComponent
             product={this.props.cartItem.product}
             attributes={this.props.cartItem.attributes}

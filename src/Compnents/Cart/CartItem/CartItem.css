@@ -1,0 +1,11 @@
+.cart-item{
+    margin: 0 10rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+.cart-item > *{
+    height: 21rem;
+    width: 14rem;
+}

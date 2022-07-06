@@ -2,50 +2,62 @@ import React, {Component} from 'react';
 import {BrowserRouter, Switch, Route} from "react-router-dom";
 import HeaderComponent from "./Compnents/Header/Header.Component";
 import ProductListingPageComponent from "./Compnents/PLP/PLP.Component";
-import {getProduct} from "./BackendCalls/getProduct";
+import ProductDetailsPageComponent from "./Compnents/PDP/ProductDetailsPage.Component";
+import CartComponent from "./Compnents/Cart/Cart.Component";
 
 class App extends Component {
-  //        item string, qunitiy
-  //cart: {JSON.stringfiy({id: id, attributes: {size: 41}): 2}
+
 
   constructor(props) {
     super(props);
     this.state = {
-      cart: {'{"id":"lorem","attributes":{"size":0}}':  0},
+      cart: [],
       selectedCurrency: "USD"
     }
   }
 
-  addToCart(product){
-    let currentCart = this.state.cart;
-    if(currentCart['{"id":"lorem","attributes":{"size":0}}'] !== undefined){
-      delete currentCart['{"id":"lorem","attributes":{"size":0}}']
-    }
-    if(currentCart[product] !== undefined){
-      currentCart[product] = Number(currentCart[product]) + 1
-      this.setState({cart: currentCart})
-      console.log(this.state.cart)
-    }else {
-      let item = JSON.parse(product)
-      console.log(item)
-      if(item.attributes === undefined){
-        getProduct(item.id).then((res) => {
-          item.attributes = res.attributes
-          currentCart[JSON.stringify(item)] = 1
-          this.setState({
-            cart: currentCart
-          })
-          console.log(this.state.cart)
-        })
-      }else{
-        currentCart[JSON.stringify(item)] = 1
-        this.setState({
-          cart: currentCart
-        })
-        console.log(this.state.cart)
+  addToCart(item){
+    console.log('adding', item)
+    let currentCart = this.state.cart
+    for (let i = 0; i < currentCart.length; i++) {
+      if (currentCart[i].product.id === item.product.id && currentCart[i].attributes === item.attributes) {
+        currentCart[i].quantity += 1
+        this.setState({cart: currentCart})
+        return
       }
     }
-
+    currentCart.push({product: item.product, attributes: item.attributes, quantity: 1})
+    this.setState({cart: currentCart})
+  }
+  removeFromCart(item){
+    let currentCart = this.state.cart
+    for (let i = 0; i < currentCart.length; i++) {
+      if (currentCart[i].product.id === item.product.id && currentCart[i].attributes === item.attributes) {
+        currentCart.splice(i, 1)
+        this.setState({cart: currentCart})
+        return
+      }
+    }
+  }
+  updateCartItemQuantity(item, quantity){
+    let currentCart = this.state.cart
+    for (let i = 0; i < currentCart.length; i++) {
+      if (currentCart[i].product.id === item.product.id && currentCart[i].attributes === item.attributes) {
+        currentCart[i].quantity = quantity
+        this.setState({cart: currentCart})
+        return
+      }
+    }
+  }
+  updateCartItemAttributes(item, attributes){
+    let currentCart = this.state.cart
+    for (let i = 0; i < currentCart.length; i++) {
+      if (currentCart[i].product.id === item.product.id && currentCart[i].attributes === item.attributes) {
+        currentCart[i].attributes = attributes
+        this.setState({cart: currentCart})
+        return
+      }
+    }
   }
   setSelectedCurrency(currencyLabel){
     this.setState({selectedCurrency: currencyLabel})
@@ -55,17 +67,37 @@ class App extends Component {
         <div>
           <BrowserRouter>
             <HeaderComponent
-              setSelectedCurrency={this.setSelectedCurrency.bind(this)}
+                key={JSON.stringify({cart: this.state.cart, selectedCurrency: this.state.selectedCurrency})}
+                selectedCurrency={this.state.selectedCurrency}
+                setSelectedCurrency={this.setSelectedCurrency.bind(this)}
+                cart={this.state.cart}
             />
             <Switch>
-              <Route path="/:category" >
+              <Route path="/product/:id" render={(props) => (
+                  <ProductDetailsPageComponent
+                      key={props.match.params.id}
+                      addToCart={this.addToCart.bind(this)}
+                      selectedCurrency={this.state.selectedCurrency}/>
+                 )}
+              />
+              <Route exact path="/cart" render={() => (
+                 <CartComponent
+                     cart={this.state.cart}
+                     addToCart={this.addToCart.bind(this)}
+                     removeFromCart={this.removeFromCart.bind(this)}
+                     updateCartItemQuantity={this.updateCartItemQuantity.bind(this)}
+                     updateCartItemAttributes={this.updateCartItemAttributes.bind(this)}
+                     selectedCurrency={this.state.selectedCurrency}
+                 />)
+              }
+              />
+              <Route exact path="/:category" render={(props) => (
                 <ProductListingPageComponent
-                    addToCart={this.addToCart.bind(this)}
-                    selectedCurrency={this.state.selectedCurrency}
-                />
-              </Route>
-              <Route></Route>
-              <Route></Route>
+                  key={props.match.params.category}
+                  addToCart={this.addToCart.bind(this)}
+                  selectedCurrency={this.state.selectedCurrency}
+                />)}
+              />
             </Switch>
           </BrowserRouter>
         </div>

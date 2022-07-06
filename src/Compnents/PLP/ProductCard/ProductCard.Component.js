@@ -7,43 +7,32 @@ class ProductCardComponent extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      product: {
-        id: "",
-        name: "",
-        brand: "",
-        inStock: true,
-        gallery: [""],
-        category: "",
-        prices:[{
-          currency: {
-            label: "",
-            symbol: ""
-          },
-          amount: 0
-        }]
-      },
-      attributes: {size: 0},
-      price: {currency:{label: "", symbol: ""}, amount:0}
+      isLoading: true,
+      product: {},
+      attributes: {},
+      price: "USD"
     }
   }
   componentDidMount() {
     getProduct(this.props.id).then((res) => {
-      let prices = res.product.prices.slice()
+      let prices = res['product'].prices.slice()
       prices = prices.filter((price)=> {
         return price.currency.label === this.props.selectedCurrency
       })
       const price = prices[0];
       this.setState({
-        product: res.product,
-        attributes: res.attributes,
-        price: price
+        product: res['product'],
+        attributes: res['attributes'],
+        price: price,
+        isLoading: false
       })
     })
   }
   _addToCart(){
-    this.props.addToCart(JSON.stringify({id:this.state['product'].id, attributes: this.state['attributes']}))
+    this.props.addToCart({product: this.state['product'], attributes: this.state['attributes']})
   }
   render(){
+    if (this.state['isLoading']) { return <div></div> }
     return (
         <div className="product-card" key={this.props.id}>
           <Link style={{textDecoration: 'none', "color": "black"}} to={`/product/${this.props.id}`}>
@@ -58,7 +47,7 @@ class ProductCardComponent extends PureComponent {
             </div>
           </Link>
           <div onClick={this._addToCart.bind(this)} className="card-add-button">
-            <div style={{backgroundColor: "black"}} className="cart-icon">{addToCart}</div>
+            <div className="cart-icon">{addToCart}</div>
           </div>
         </div>
     );

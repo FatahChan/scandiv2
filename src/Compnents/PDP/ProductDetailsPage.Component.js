@@ -1,75 +1,54 @@
-import React, {PureComponent} from 'react';
+import React, {Component} from 'react';
 import {withRouter} from "react-router-dom";
 import ProductCarouselComponent from "./ProductCarousel/ProductCarousel.Component";
 import ProductInfoComponent from "./ProductInfo/ProductInfo.Component";
 import {getProduct} from "../../BackendCalls/getProduct";
-
-class ProductDetailsPageComponent extends PureComponent {
+import "./ProductDetailsPage.css"
+class ProductDetailsPageComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      product: {
-        id: "",
-        name: "",
-        brand: "",
-        description: "",
-        inStock: true,
-        gallery: [""],
-        category: "",
-        attributes:[{
-          id: "",
-          name: "",
-          type: "",
-          items:[{
-            displayValue:"",
-            value: "",
-            id: ""
-          }]
-        }],
-        prices:[{
-          currency: {
-            label: "",
-            symbol: ""
-          },
-          amount: 0
-        }]
-      },
-      attributes: {size: 0},
-      price: {currency:{label: "", symbol: ""}, amount:0}
+      isLoading: true,
+      product: {},
+      attributes: {},
+      price: {}
     }
   }
   componentDidMount() {
     getProduct(this.props['match']['params'].id).then((res) => {
-      let prices = res.product.prices.slice()
+      let prices = res['product']['prices'].slice()
       prices = prices.filter((price)=> {
         return price.currency.label === this.props.selectedCurrency
       })
       const price = prices[0];
       this.setState({
-        product: res.product,
-        attributes: res.attributes,
-        price: price
+        product: res['product'],
+        attributes: res['attributes'],
+        price: price,
+        isLoading: false
       })
     })
   }
   _addToCart(){
-    this.props.addToCart(JSON.stringify({id:this.state['product'].id, attributes: this.state['attributes']}))
+    this.props.addToCart({product: this.state['product'], attributes: this.state['attributes']})
   }
-  updateAttributes(name, value){
-    let currAttributes = JSON.parse(JSON.stringify(this.state['attributes']))
-    this.setState({attributes: currAttributes})
+  updateAttributes(attribute, value) {
+    let currentAttributes = this.state['attributes']
+    currentAttributes[attribute] = value
+    this.setState({attributes: currentAttributes})
   }
   render() {
+    if (this.state['isLoading']) { return <div>Loading...</div> }
     return (
-        <div>
+        <div className='product-details-page'>
           <ProductCarouselComponent
               gallery={this.state['product']['gallery']}
           />
           <ProductInfoComponent
               product={this.state['product']}
-              addToCart={this._addToCart.bind(this)}
               price={this.state['price']}
-              selectedAttributes={this.state['attributes']}
+              selectedAttributes={this.state.attributes}
+              addToCart={this._addToCart.bind(this)}
               updateAttributes={this.updateAttributes.bind(this)}
           />
         </div>

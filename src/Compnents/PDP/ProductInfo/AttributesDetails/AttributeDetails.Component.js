@@ -1,43 +1,35 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
+import "./AttributeDetails.css"
+class AttributeDetailsComponent extends PureComponent {
 
-class AttributeDetailsComponent extends Component {
+
   render() {
     const type = this.props.type
     const items =
         type === 'text'?
-            this.props.items.map((item, i)=>(
+            this.props.items.map((item)=>(
               <div
-                  key={i}
+                  key={item.id}
                   onClick={() => this.props.updateAttributes(this.props.name, item.value)}
                   className={`text-attribute ${item.value === this.props.selectedAttributes[this.props.name]? 'text-attribute-selected': ''}`}
               >
                 {item.value}
               </div>
             )):
-            this.props.items.map((item, i)=> (
+            this.props.items.map((item)=> (
               <div
+                  key={item.id}
                   onClick={() => this.props.updateAttributes(this.props.name, item.value)}
-                  className={item.value === this.props.selectedAttributes[this.props.name]? 'swatch-attribute-selected': ''}
-                  key={i}
+                  className={"swatch-attribute-container " + (item.value === this.props.selectedAttributes[this.props.name]? 'swatch-attribute-selected': '')}
               >
                 <div className="swatch-attribute" style={{backgroundColor: item.value}}></div>
               </div>
             ))
     return (
-        <div>
-          {/*  attributes:{*/}
-          {/*  id: "",*/}
-          {/*  name: "",*/}
-          {/*  type: "",*/}
-          {/*  items:{*/}
-          {/*  displayValue:"",*/}
-          {/*  value: "",*/}
-          {/*  id: ""*/}
-          {/*}*/}
-          {/*},*/}
-          <div>{this.props.name}:</div>
-          <div>{items}</div>
-        </div>
+        <>
+          <div className="label">{this.props.name}:</div>
+          <div className="attribute">{items}</div>
+        </>
     );
   }
 }

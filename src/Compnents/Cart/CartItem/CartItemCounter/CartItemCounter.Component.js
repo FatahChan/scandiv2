@@ -5,7 +5,7 @@ class CartItemCounterComponent extends PureComponent {
     return (
 
         <div className="cart-item-counter">
-          <div className="cart-item-increment"> 	&#43;</div>
+          <div className="cart-item-increment"> &#43;</div>
           <div>{this.props.quantity}</div>
           <div className="cart-item-decrement"> &minus;</div>
         </div>

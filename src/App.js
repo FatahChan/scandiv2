@@ -20,17 +20,17 @@ class App extends Component {
     console.log('adding', item)
     let currentCart = this.state.cart
     for (let i = 0; i < currentCart.length; i++) {
-      if (currentCart[i].product.id === item.product.id && currentCart[i].attributes === item.attributes) {
+      if (currentCart[i].product.id === item.product.id && JSON.stringify(currentCart[i].attributes) === JSON.stringify(item.attributes)) {
         currentCart[i].quantity += 1
         this.setState({cart: currentCart})
         return
       }
     }
-    currentCart.push({product: item.product, attributes: item.attributes, quantity: 1})
+    currentCart.push({product: item.product, attributes: Object.assign(item.attributes), quantity: 1})
     this.setState({cart: currentCart})
   }
   removeFromCart(item){
-    let currentCart = this.state.cart
+    let currentCart = JSON.parse(JSON.stringify(this.state.cart))
     for (let i = 0; i < currentCart.length; i++) {
       if (currentCart[i].product.id === item.product.id && currentCart[i].attributes === item.attributes) {
         currentCart.splice(i, 1)
@@ -40,21 +40,34 @@ class App extends Component {
     }
   }
   updateCartItemQuantity(item, quantity){
-    let currentCart = this.state.cart
+    let currentCart = JSON.parse(JSON.stringify(this.state.cart))
     for (let i = 0; i < currentCart.length; i++) {
-      if (currentCart[i].product.id === item.product.id && currentCart[i].attributes === item.attributes) {
-        currentCart[i].quantity = quantity
+      if (currentCart[i].product.id === item.product.id && JSON.stringify(currentCart[i].attributes) === JSON.stringify( item.attributes)) {
+        currentCart[i].quantity = Number(quantity)
         this.setState({cart: currentCart})
         return
       }
     }
   }
   updateCartItemAttributes(item, attributes){
-    let currentCart = this.state.cart
+    let currentCart = JSON.parse(JSON.stringify(this.state.cart))
+    const _item = JSON.parse(JSON.stringify(item))
+    const _attributes = JSON.parse(JSON.stringify(attributes))
     for (let i = 0; i < currentCart.length; i++) {
-      if (currentCart[i].product.id === item.product.id && currentCart[i].attributes === item.attributes) {
-        currentCart[i].attributes = attributes
-        this.setState({cart: currentCart})
+
+
+      if (currentCart[i].product.id === _item.product.id && JSON.stringify(currentCart[i].attributes) === JSON.stringify(_item.attributes)) {
+        currentCart[i].attributes = Object.assign(_attributes)
+        let j;
+        for (j = 0; j < currentCart.length; j++) {
+          if (j === i) continue;
+          if (currentCart[i].product.id === _item.product.id && JSON.stringify(currentCart[i].attributes) === JSON.stringify(_item.attributes)) {
+            currentCart[i].quantity += currentCart[j].quantity;
+            currentCart.splice(j, 1);
+            break;
+          }
+        }
+        this.setState({cart: JSON.parse(JSON.stringify(currentCart))})
         return
       }
     }

@@ -1,11 +1,17 @@
 .cart-item{
-    margin: 0 10rem;
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
     align-items: center;
-    gap: 2rem;
+    justify-content: space-between;
+    width: 80%;
+
+    padding: 1rem 0;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;;
+
 }
-.cart-item > *{
-    height: 21rem;
-    width: 14rem;
+
+.cart-counter-carousel{
+    display: flex;
+    gap: 2rem;
 }

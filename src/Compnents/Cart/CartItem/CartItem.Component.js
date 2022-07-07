@@ -16,9 +16,7 @@ class CartItemComponent extends PureComponent {
     })
   }
   _updateAttribute(attribute, value) {
-    let attributes = this.props.cartItem.attributes;
-    console.log(attributes);
-    console.log(attribute)
+    let attributes = Object.assign(this.props.cartItem.attributes);
     attributes[attribute] = value;
     this.props.updateCartItemAttributes(this.props.cartItem, attributes);
   }
@@ -32,11 +30,13 @@ class CartItemComponent extends PureComponent {
             selectedCurrency={this.props.selectedCurrency}
             updateAttributes={this._updateAttribute.bind(this)}
           />
+          <div className="cart-counter-carousel">
           <CartItemCounterComponent
             quantity={this.props.cartItem.quantity}
             updateCartItemQuantity={this.props.updateCartItemQuantity}
           />
           <CartItemCarouselComponent gallery={this.props.cartItem.product.gallery}/>
+          </div>
         </div>
     );
   }

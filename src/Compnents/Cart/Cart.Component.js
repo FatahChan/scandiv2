@@ -9,7 +9,7 @@ class CartComponent extends Component {
             <div className="cart-items">
               {this.props.cart.map((cartItem) => (
               <CartItemComponent
-                  key={JSON.stringify(cartItem)}
+                  key={JSON.stringify(cartItem.product)}
                   cartItem={cartItem}
                   selectedCurrency={this.props.selectedCurrency}
                   updateCartItemQuantity={this.props.updateCartItemQuantity}

@@ -3,30 +3,32 @@ import "./CartItemAttributeDetails.css"
 class CartItemAttributeDetailsComponent extends PureComponent {
   render() {
     const {name, type, items} = this.props.attributes;
-    const attributeOptions =
-        type === 'text'?
-            items.map((item)=>(
+    let attributeOptions;
+    if (type === 'text') {
+      attributeOptions = items.map((item)=>(
               <div
                   key={item.id}
                   onClick={() => this.props.updateAttributes(name, item.value)}
-                  className={`text-attribute ${item.value === this.props.selectedAttributes[name]? 'text-attribute-selected': ''}`}
+                  className={`cart-text-attribute ${item.value === this.props.selectedAttributes[name]? 'cart-text-attribute-selected': ''}`}
               >
                 {item.value}
               </div>
-            )):
-            items.map((item)=> (
-              <div
-                  key={item.id}
-                  onClick={() => this.props.updateAttributes(name, item.value)}
-                  className={"swatch-attribute-container " + (item.value === this.props.selectedAttributes[name]? 'swatch-attribute-selected': '')}
-              >
-                <div className="swatch-attribute" style={{backgroundColor: item.value}}></div>
-              </div>
             ))
+    }else if(type === 'swatch') {
+      attributeOptions =items.map((item) => (
+          <div
+              key={item.id}
+              onClick={() => this.props.updateAttributes(name, item.value)}
+              className={"cart-swatch-attribute-container " + (item.value === this.props.selectedAttributes[name] ? 'cart-swatch-attribute-selected' : '')}
+          >
+            <div className="cart-swatch-attribute" style={{backgroundColor: item.value}}></div>
+          </div>
+      ))
+    }
     return (
         <>
-          <div className="label">{name}:</div>
-          <div className="attribute">{attributeOptions}</div>
+          <div className="cart-label">{name}:</div>
+          <div className="cart-attribute">{attributeOptions}</div>
         </>
     );
   }

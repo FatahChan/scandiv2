@@ -30,11 +30,11 @@ class ProductDetailsPageComponent extends Component {
     })
   }
   _addToCart(){
-    this.props.addToCart({product: this.state['product'], attributes: this.state['attributes']})
+    this.props.addToCart({product: this.state['product'], attributes: JSON.parse(JSON.stringify(this.state['attributes']))})
   }
   updateAttributes(attribute, value) {
-    let currentAttributes = this.state['attributes']
-    currentAttributes[attribute] = value
+    let currentAttributes = Object.assign(this.state['attributes'])
+    currentAttributes[attribute] = String(value)
     this.setState({attributes: currentAttributes})
   }
   render() {

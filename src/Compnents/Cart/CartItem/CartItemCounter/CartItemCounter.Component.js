@@ -5,9 +5,9 @@ class CartItemCounterComponent extends PureComponent {
     return (
 
         <div className="cart-item-counter">
-          <div className="cart-item-increment"> &#43;</div>
+          <div onClick={() => this.props.updateQuantity(this.props.quantity + 1)} className="cart-item-increment"> &#43;</div>
           <div>{this.props.quantity}</div>
-          <div className="cart-item-decrement"> &minus;</div>
+          <div onClick={() => this.props.updateQuantity(this.props.quantity - 1)} className="cart-item-decrement"> &minus;</div>
         </div>
 
     );

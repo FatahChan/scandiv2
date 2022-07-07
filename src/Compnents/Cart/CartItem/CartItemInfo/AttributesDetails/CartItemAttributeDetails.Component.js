@@ -1,15 +1,20 @@
 import React, {PureComponent} from 'react';
 import "./CartItemAttributeDetails.css"
 class CartItemAttributeDetailsComponent extends PureComponent {
+
+
+
   render() {
-    const {name, type, items} = this.props.attributes;
+    const {name, type, items} = this.props.attribute;
+    const selected = this.props.attributes[name];
     let attributeOptions;
     if (type === 'text') {
       attributeOptions = items.map((item)=>(
               <div
                   key={item.id}
                   onClick={() => this.props.updateAttributes(name, item.value)}
-                  className={`cart-text-attribute ${item.value === this.props.selectedAttributes[name]? 'cart-text-attribute-selected': ''}`}
+                  id={JSON.stringify({attribute: name, value: item.value})}
+                  className={`cart-text-attribute ${item.value === selected? 'cart-text-attribute-selected': ''}`}
               >
                 {item.value}
               </div>
@@ -19,7 +24,7 @@ class CartItemAttributeDetailsComponent extends PureComponent {
           <div
               key={item.id}
               onClick={() => this.props.updateAttributes(name, item.value)}
-              className={"cart-swatch-attribute-container " + (item.value === this.props.selectedAttributes[name] ? 'cart-swatch-attribute-selected' : '')}
+              className={"cart-swatch-attribute-container " + (item.value === selected ? 'cart-swatch-attribute-selected' : '')}
           >
             <div className="cart-swatch-attribute" style={{backgroundColor: item.value}}></div>
           </div>

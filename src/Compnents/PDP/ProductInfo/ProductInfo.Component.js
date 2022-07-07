@@ -22,7 +22,7 @@ class ProductInfoComponent extends PureComponent {
           </div>
           <div className="label">Price:</div>
           <div className="price">{this.props.price.currency.symbol}{this.props.price.amount}</div>
-          <div onClick={this.props.addToCart} className="add-to-cart">ADD TO CART</div>
+          <div onClick={this.props['product']['inStock']? this.props.addToCart: ()=>{}} className={`add-to-cart ${this.props['product']['inStock']? '':'out-of-stock-button'}`}>ADD TO CART</div>
         </div>
     );
   }

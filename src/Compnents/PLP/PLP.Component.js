@@ -24,14 +24,22 @@ class ProductListingPageComponent extends PureComponent {
     const ProductCards = this.state['products'].map((product) => (
         <ProductCardComponent
             key={JSON.stringify(product)}
-            addToCart={this.props.addToCart}
             id={product.id}
-            selectedCurrency={this.props.selectedCurrency}
+            name={product.name}
+            brand={product.brand}
+            prices={product.prices}
+            gallery={product.gallery}
+            getCart={this.props.getCart}
+            setCart={this.props.setCart}
+            getSelectedCurrency={this.props.getSelectedCurrency}
         />
     ))
     return (
-        <div className="product-list" key={this.state.category}>
-          {ProductCards}
+        <div>
+          <div className="product-list-category-name">{this.state.category}</div>
+          <div className="product-list" key={this.state.category}>
+            {ProductCards}
+          </div>
         </div>
     );
   }

@@ -18,7 +18,7 @@ class ProductDetailsPageComponent extends Component {
     getProduct(this.props['match']['params'].id).then((res) => {
       let prices = res['product']['prices'].slice()
       prices = prices.filter((price)=> {
-        return price.currency.label === this.props.selectedCurrency
+        return price.currency.label === this.props.getSelectedCurrency().label;
       })
       const price = prices[0];
       this.setState({
@@ -30,12 +30,23 @@ class ProductDetailsPageComponent extends Component {
     })
   }
   _addToCart(){
-    this.props.addToCart({product: this.state['product'], attributes: JSON.parse(JSON.stringify(this.state['attributes']))})
+    let cart = this.props.getCart();
+    const product = JSON.stringify(this.state['product']);
+    const attributes = JSON.stringify(this.state['attributes']);
+    for (let i = 0; i < cart.length; i++) {
+      if(JSON.stringify(cart[i]['product']) === product && JSON.stringify(cart[i]['attributes']) === attributes){
+        cart[i]['quantity'] += 1;
+        this.props.setCart(cart);
+        return;
+      }
+    }
+    cart.push({ product: this.state['product'], attributes: this.state['attributes'], quantity: 1 });
+    this.props.setCart(cart);
   }
   updateAttributes(attribute, value) {
-    let currentAttributes = Object.assign(this.state['attributes'])
-    currentAttributes[attribute] = String(value)
-    this.setState({attributes: currentAttributes})
+    let attributes = JSON.parse(JSON.stringify(this.state.attributes));
+    attributes[attribute] = value;
+    this.setState({attributes: attributes});
   }
   render() {
     if (this.state['isLoading']) { return <div>Loading...</div> }
@@ -47,7 +58,7 @@ class ProductDetailsPageComponent extends Component {
           <ProductInfoComponent
               product={this.state['product']}
               price={this.state['price']}
-              selectedAttributes={this.state.attributes}
+              selectedAttributes={JSON.parse(JSON.stringify(this.state.attributes))}
               addToCart={this._addToCart.bind(this)}
               updateAttributes={this.updateAttributes.bind(this)}
           />

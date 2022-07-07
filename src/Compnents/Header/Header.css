@@ -70,24 +70,5 @@
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 1;
 }
-.cart-header{
-    position: relative;
-}
-.cart-badge{
-    position: absolute;
-    color: white;
-    background-color: black;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: -0.8rem;
-    right: -1rem;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-}
 
 

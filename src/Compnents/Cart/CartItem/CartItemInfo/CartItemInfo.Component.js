@@ -5,7 +5,7 @@ class CartItemInfoComponent extends PureComponent {
 
 
   render() {
-    const price = this.props['product']['prices'].filter(price => price.currency.label === this.props['selectedCurrency'])[0];
+    const price = this.props.product.prices.find((price) => price.currency.label === this.props.getSelectedCurrency().label);
     return (
         <div className="cart-item-info">
           <div className='cart-brand-label'>{this.props.product.brand}</div>
@@ -15,13 +15,12 @@ class CartItemInfoComponent extends PureComponent {
             <div className="cart-label">Price:</div>
             <div className="cart-price">{price.currency.symbol}{price.amount}</div>
             {
-
               this.props.product.attributes.map((attribute) => (
                   <CartItemAttributeDetailsComponent
-                      key={JSON.stringify(this.props.attributes[attribute.name])}
+                      key={JSON.stringify({attribute: attribute.name, value: this.props.attributes[attribute.name]})}
+                      attribute={attribute}
+                      attributes={this.props.attributes}
                       updateAttributes={this.props.updateAttributes}
-                      attributes={attribute}
-                      selectedAttributes={this.props.attributes}
                   />))
             }
           </div>

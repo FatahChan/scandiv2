@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {BrowserRouter, Switch, Route} from "react-router-dom";
+import {BrowserRouter, Switch, Route, Redirect} from "react-router-dom";
 import HeaderComponent from "./Compnents/Header/Header.Component";
 import ProductListingPageComponent from "./Compnents/PLP/PLP.Component";
 import ProductDetailsPageComponent from "./Compnents/PDP/ProductDetailsPage.Component";
 import CartComponent from "./Compnents/Cart/Cart.Component";
 import "./App.css"
+import {getCategories} from "./BackendCalls/getCategories";
 class App extends Component {
 
 
@@ -12,9 +13,16 @@ class App extends Component {
     super(props);
     this.state = {
       cart: [],
-      selectedCurrency: {label: "USD", symbol: "$"}
+      selectedCurrency: {label: "USD", symbol: "$"},
+      categories: []
     }
   }
+  componentDidMount() {
+    getCategories().then((res) => {
+      this.setState({categories: res})
+    })
+  }
+
   setCart(cart){
     console.log("setCart", cart);
     this.setState({cart: cart});
@@ -40,6 +48,9 @@ class App extends Component {
                 getCart={this.getCart.bind(this)}
             />
             <Switch>
+              <Route exact path="/" >
+                <Redirect to={`/default`}/>
+              </Route>
               <Route path="/product/:id" render={(props) => (
                   <ProductDetailsPageComponent
                       key={JSON.stringify({id: props.match.params.id, currency: this.state.selectedCurrency})}

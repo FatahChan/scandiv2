@@ -63,6 +63,7 @@ class ProductDetailsPageComponent extends Component {
               updateAttributes={this.updateAttributes.bind(this)}
           />
         </div>
+
     );
   }
 }

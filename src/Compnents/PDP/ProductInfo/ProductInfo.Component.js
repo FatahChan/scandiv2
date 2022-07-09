@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react';
 import AttributeDetailsComponent from "./AttributesDetails/AttributeDetails.Component";
 import './ProductInfo.css'
+import {Interweave} from "interweave";
 class ProductInfoComponent extends PureComponent {
   render() {
     return (
@@ -23,6 +24,9 @@ class ProductInfoComponent extends PureComponent {
           <div className="label">Price:</div>
           <div className="price">{this.props.price.currency.symbol}{this.props.price.amount}</div>
           <div onClick={this.props['product']['inStock']? this.props.addToCart: ()=>{}} className={`add-to-cart ${this.props['product']['inStock']? '':'out-of-stock-button'}`}>ADD TO CART</div>
+          <div className="description ">
+            <Interweave content={this.props.product.description}/>
+          </div>
         </div>
     );
   }

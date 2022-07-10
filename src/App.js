@@ -21,11 +21,15 @@ class App extends Component {
     getCategories().then((res) => {
       this.setState({categories: res})
     })
+    if(sessionStorage.getItem("cart")){
+      this.setState({cart: JSON.parse(sessionStorage.getItem("cart"))})
+    }
   }
 
   setCart(cart){
     console.log("setCart", cart);
     this.setState({cart: cart});
+    sessionStorage.setItem("cart", JSON.stringify(cart));
   }
   getCart() {
     return JSON.parse(JSON.stringify(this.state.cart));

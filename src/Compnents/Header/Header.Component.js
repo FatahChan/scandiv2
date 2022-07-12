@@ -37,10 +37,6 @@ class HeaderComponent extends PureComponent {
 
   render() {
     if(this.state['isLoading']) { return <div>Loading...</div> }
-    let cartCount = 0;
-    this.props.getCart().forEach((item) => {
-      cartCount += item.quantity
-    })
 
     return (
         <div className="header">
